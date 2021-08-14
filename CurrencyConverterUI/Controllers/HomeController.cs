@@ -1,71 +1,38 @@
-﻿using CurrencyConverterUI.Models;
+﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 
 namespace CurrencyConverterUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConverterService _converterService;
+        public HomeController(IConverterService converterService)
         {
-            _logger = logger;
+           _converterService = converterService;
         }
 
         public IActionResult Index()
         {
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:44376");
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                var response = client.GetAsync("/api/converter/getcurrencytypes").Result;
+            var result = _converterService.GetCurrencies();
 
-                List<Currency> currencies = new List<Currency>();
+            List<string> items = result.Select(i => i.CurrencyType).ToList();
+            ViewBag.CurrencyList = new SelectList(items, "CurrencyType");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    string content = response.Content.ReadAsStringAsync().Result;
-                    currencies = JsonConvert.DeserializeObject<List<Currency>>(content);
-                }
-
-                    List<string> items = currencies.Select(i => i.CurrencyType).ToList();
-                    ViewBag.CurrencyList = new SelectList(items, "CurrencyType");
-                    
-                return View();
-            }
+            return View();
         }
 
         [HttpPost]
         public IActionResult Convert(string currentCurrency, string targetCurrency, double amount)
         {
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:44376");
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                var response = client.GetAsync("/api/converter/convertcurrencies?currentCurrency=" + currentCurrency + "&targetCurrency=" + targetCurrency + "&amount=" + amount + "").Result;
-
-                List<Currency> currencies = new List<Currency>();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string content = response.Content.ReadAsStringAsync().Result;
-                }
-            }
-
+            var result = _converterService.ConvertCurrencies(currentCurrency, targetCurrency, amount);
             return View();
         }
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+
     }
 }
+
+
+

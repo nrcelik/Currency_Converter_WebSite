@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace CurrencyConverterUI.Controllers
@@ -14,12 +16,14 @@ namespace CurrencyConverterUI.Controllers
            _converterService = converterService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string message="", string targetCurrency="")
         {
             var result = _converterService.GetCurrencies();
-
             List<string> items = result.Select(i => i.CurrencyType).ToList();
+
             ViewBag.CurrencyList = new SelectList(items, "CurrencyType");
+            ViewBag.Message = message;
+            ViewBag.TargetCurrency = targetCurrency;
 
             return View();
         }
@@ -28,7 +32,11 @@ namespace CurrencyConverterUI.Controllers
         public IActionResult Convert(string currentCurrency, string targetCurrency, double amount)
         {
             var result = _converterService.ConvertCurrencies(currentCurrency, targetCurrency, amount);
-            return View();
+
+            string message = result.ToString("0.00", CultureInfo.InvariantCulture);
+
+            return RedirectToAction("Index", new { message = message, targetCurrency = targetCurrency });
+           
         }
 
     }

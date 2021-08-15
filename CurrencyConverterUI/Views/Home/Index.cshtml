@@ -1,15 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
 @using (Html.BeginForm("Convert", "Home", FormMethod.Post))
 {
-    <div class="form-group mt-5 p-4 w-100 h-100 bg-light" style="color: #737373;">
+    <div class="form-group mt-5 p-4 bg-light" style="color: #737373;">
         <div class="row">
             <div class="col-md-3 mb-2">
                 <h5>Amount</h5>
             </div>
-            <div class="col-md-4 mb-2">
-                <input type="text" name="amount" class="form-control">
+            <div class="col-md-3 mb-2">
+                <input type="text" name="amount" id="amount" class="form-control">
             </div>
         </div>
         <div class="row">
@@ -17,8 +18,8 @@
                 <h5>Current Currency</h5>
             </div>
             <div class="col-md-3 mb-2">
-                <select class="form-control" asp-items="ViewBag.CurrencyList" name="currentCurrency">
-                    <option value="">-- Select Category --</option>
+                <select class="form-control" id="currentCurrency" asp-items="ViewBag.CurrencyList" name="currentCurrency">
+                    <option value="">-- Select --</option>
                 </select>
             </div>
         </div>
@@ -26,20 +27,40 @@
             <div class="col-md-3 mb-3">
                 <h5>Target Currency</h5>
             </div>
-            <div class="col-md-4 mb-3">
-                <select class="form-control" asp-items="ViewBag.CurrencyList" name="targetCurrency">
-                    <option value="">-- Select Category --</option>
+            <div class="col-md-3 mb-3">
+                <select class="form-control" id="targetCurrency" asp-items="ViewBag.CurrencyList" name="targetCurrency">
+                    <option value="">-- Select --</option>
                 </select>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-success">Convert</button>
+            <div class="col-md-3 mb-3"></div>
+            <div class="col-md-4 mb-3">
+                <button type="submit" class="btn btn-success" id="btnConvert">Convert</button>
                 <button type="submit" class="btn btn-danger">Cancel</button>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-3 "></div>
+            <div class="col-md-3">
+                <div class="alert alert-danger fade" role="alert" id="validationMessage">
+                    <strong> All fields must be filled out! </strong>
+                </div>
+            </div>
+        </div>
     </div>
+
+    @if (ViewBag.Message != "" && ViewBag.TargetCurrency != "")
+    {
+        <div class="alert alert-warning alert-dismissible show" id="resultMessage" role="alert">
+            <p>
+                <strong>
+                    Hello User, <br />
+                    New amount was calculated as @ViewBag.Message @ViewBag.TargetCurrency.
+                </strong>
+            </p>
+        </div>
+    }
 
 }
 

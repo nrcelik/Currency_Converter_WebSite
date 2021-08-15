@@ -1,0 +1,3 @@
+[submodule "Currency_Converter"]
+	path = Currency_Converter
+	url = https://github.com/nrcelik/Currency_Converter.git

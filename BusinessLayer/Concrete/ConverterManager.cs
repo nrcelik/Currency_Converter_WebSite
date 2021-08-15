@@ -9,16 +9,14 @@ namespace BusinessLayer.Concrete
 {
     public class ConverterManager : IConverterService
     {
-
         public Uri BasePath { get; set; } = new Uri("https://localhost:44376");
-        public List<Currency> Currencies { get ; set; }
+        public List<Currency> Currencies { get; set; }
 
         public double ConvertCurrencies(string currentCurrency, string targetCurrency, double amount)
         {
             string content = "";
             using (HttpClient client = new HttpClient())
             {
-                
                 client.BaseAddress = BasePath;
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var response = client.GetAsync("/api/converter/convertcurrencies?currentCurrency=" + currentCurrency + "&targetCurrency=" + targetCurrency + "&amount=" + amount + "").Result;
@@ -27,7 +25,7 @@ namespace BusinessLayer.Concrete
 
                 if (response.IsSuccessStatusCode)
                 {
-                     content = response.Content.ReadAsStringAsync().Result;      
+                    content = response.Content.ReadAsStringAsync().Result;
                 }
             }
             return Convert.ToDouble(content);

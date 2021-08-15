@@ -4,7 +4,6 @@
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-stylish-portfolio/blob/master/LICENSE)
 */
 window.addEventListener('DOMContentLoaded', event => {
-
     const sidebarWrapper = document.getElementById('sidebar-wrapper');
     let scrollToTopVisible = false;
     // Closes the sidebar menu
@@ -78,4 +77,3 @@ function fadeIn(el, display) {
         }
     })();
 };
-

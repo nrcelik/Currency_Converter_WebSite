@@ -1,5 +1,3 @@
-using System;
-
 namespace CurrencyConverterUI.Models
 {
     public class ErrorViewModel

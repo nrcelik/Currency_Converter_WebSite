@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,12 +10,13 @@ namespace CurrencyConverterUI.Controllers
     public class HomeController : Controller
     {
         private readonly IConverterService _converterService;
+
         public HomeController(IConverterService converterService)
         {
-           _converterService = converterService;
+            _converterService = converterService;
         }
 
-        public IActionResult Index(string message="", string targetCurrency="")
+        public IActionResult Index(string message = "", string targetCurrency = "")
         {
             var result = _converterService.GetCurrencies();
             List<string> items = result.Select(i => i.CurrencyType).ToList();
@@ -36,11 +36,6 @@ namespace CurrencyConverterUI.Controllers
             string message = result.ToString("0.00", CultureInfo.InvariantCulture);
 
             return RedirectToAction("Index", new { message = message, targetCurrency = targetCurrency });
-           
         }
-
     }
 }
-
-
-
